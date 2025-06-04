@@ -1,0 +1,3 @@
+pip install Flask Flask-SocketIO python-engineio simple-websocket
+pip install SQLAlchemy # or Flask-SQLAlchemy
+pip install psycopg2-binary # if using PostgreSQL

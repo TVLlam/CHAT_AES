@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Secure AES Chat</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Tổng thể */
+        body {
+            font-family: 'Poppins', sans-serif; /* Thử dùng font khác */
+            background-color: #2c2f33; /* Màu nền tối hơn, như Discord */
+            color: #ffffff; /* Màu chữ mặc định */
+        }
+
+        .chat-container {
+            background-color: #36393f; /* Nền của khung chat, hơi sáng hơn body */
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+            overflow: hidden;
+            height: 90vh; /* Chiếm nhiều chiều cao hơn */
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+
+        /* Header */
+        .chat-header {
+            background-color: #424549; /* Màu header hơi khác */
+            color: #ffffff;
+            padding: 15px 20px;
+            font-size: 1.6rem;
+            font-weight: 600;
+        }
+        .chat-header .btn-warning {
+            background-color: #f04747; /* Đổi màu logout cho nổi bật */
+            border-color: #f04747;
+            color: white;
+            font-weight: bold;
+        }
+        .chat-header .btn-warning:hover {
+            background-color: #cc3939;
+            border-color: #cc3939;
+        }
+
+        /* Sidebar Users */
+        .chat-sidebar {
+            background-color: #2f3136; /* Màu sidebar tối hơn */
+            color: #dcddde; /* Màu chữ */
+            padding: 15px;
+        }
+        .user-list-header {
+            color: #ffffff;
+            margin-bottom: 15px;
+            font-size: 1.1rem;
+        }
+        .user-list-item {
+            background-color: transparent; /* Nền trong suốt */
+            color: #dcddde;
+            border: none;
+            text-align: left;
+            transition: background-color 0.2s ease, color 0.2s ease;
+        }
+        .user-list-item:hover {
+            background-color: #3f4247; /* Hover */
+            color: #ffffff;
+        }
+        .user-list-item.selected {
+            background-color: #5865f2; /* Màu Discord blurple */
+            color: white;
+            font-weight: bold;
+        }
+
+        /* Message Area */
+        .chat-messages {
+            background-color: #36393f; /* Màu nền tin nhắn khớp container */
+            padding: 15px 20px;
+            display: flex;
+            flex-direction: column; /* Quan trọng để bubble tin nhắn xếp dọc */
+        }
+
+        /* Message Bubbles */
+        .message-bubble {
+            padding: 10px 14px;
+            border-radius: 18px;
+            max-width: 75%; /* Tăng max-width */
+            margin-bottom: 12px;
+            font-size: 0.95rem;
+        }
+        .message-bubble.sent {
+            background-color: #5865f2; /* Màu blurple cho tin gửi */
+            color: white;
+            align-self: flex-end;
+            margin-left: auto;
+        }
+        .message-bubble.received {
+            background-color: #4f545c; /* Màu xám đậm cho tin nhận */
+            color: #dcddde;
+            align-self: flex-start;
+            margin-right: auto;
+        }
+        .message-bubble.private {
+            border: 2px solid #faa61a; /* Màu cam để highlight private */
+            background-color: #50432f; /* Nền riêng tư tối hơn */
+            color: #ffffff;
+        }
+        .message-sender {
+            font-size: 0.85em;
+            color: #b9bbbe; /* Màu tên người gửi */
+            margin-bottom: 4px;
+            font-weight: 500;
+        }
+        .message-timestamp {
+            font-size: 0.7em;
+            color: #92959c; /* Màu timestamp */
+            text-align: right;
+            margin-top: 4px;
+        }
+
+        /* Input Area */
+        .chat-input-area {
+            background-color: #424549; /* Màu nền input */
+            padding: 15px 20px;
+            border-top: 1px solid #2f3136; /* Đường viền nhẹ */
+        }
+        .chat-input-area .form-control,
+        .chat-input-area .input-group-text,
+        .chat-input-area .btn-primary {
+            border-radius: 5px; /* Bo tròn hơn */
+        }
+        .chat-input-area .form-control {
+            background-color: #424549; /* Nền input khớp area */
+            border: 1px solid #36393f;
+            color: #dcddde;
+            padding: 10px 15px;
+        }
+        .chat-input-area .form-control::placeholder {
+            color: #72767d;
+        }
+        .chat-input-area .input-group-text {
+            background-color: #424549;
+            border: 1px solid #36393f;
+            color: #dcddde;
+        }
+        .chat-input-area .btn-primary {
+            background-color: #5865f2;
+            border-color: #5865f2;
+            color: white;
+            font-weight: bold;
+            padding: 10px 20px;
+        }
+        .chat-input-area .btn-primary:hover {
+            background-color: #4752c4;
+            border-color: #4752c4;
+        }
+
+        /* AES Key Input Specific Styles */
+        .form-control-aes {
+            font-family: 'Courier New', monospace; /* Font đơn giản cho key */
+        }
+        .input-group-text {
+            white-space: nowrap; /* Ngăn text wrap */
+        }
+        .p-3.bg-light.border-bottom {
+            background-color: #36393f !important; /* Nền khớp container */
+            border-bottom: 1px solid #2f3136 !important; /* Viền khớp */
+            color: #dcddde; /* Màu chữ */
+        }
+        .p-3.bg-light.border-bottom input {
+            background-color: #424549 !important;
+            border: 1px solid #36393f !important;
+            color: #dcddde !important;
+        }
+        .p-3.bg-light.border-bottom input::placeholder {
+            color: #72767d !important;
+        }
+        .p-3.bg-light.border-bottom .btn-outline-secondary {
+            background-color: #424549 !important;
+            border-color: #36393f !important;
+            color: #dcddde !important;
+        }
+        .p-3.bg-light.border-bottom .btn-outline-secondary:hover {
+            background-color: #50545c !important;
+            border-color: #424549 !important;
+        }
+
+        /* Cuộn tin nhắn */
+        .chat-messages::-webkit-scrollbar {
+            width: 8px;
+        }
+        .chat-messages::-webkit-scrollbar-thumb {
+            background-color: #5e6267;
+            border-radius: 4px;
+        }
+        .chat-messages::-webkit-scrollbar-track {
+            background-color: #36393f;
+        }
+    </style>
+</head>
+<body>
+    <div class="container chat-container">
+        <div class="chat-sidebar">
+            <h5 class="user-list-header">Users</h5>
+            <div id="userList" class="list-group">
+                <button class="list-group-item list-group-item-action user-list-item selected" data-username="general" id="generalChatBtn">
+                    General Chat (Public)
+                </button>
+                {% for user_name in all_users %}
+                    <button class="list-group-item list-group-item-action user-list-item" data-username="{{ user_name }}">
+                        {{ user_name }}
+                    </button>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="chat-main">
+            <div class="chat-header">
+                <span>Secure AES Chat (Logged in as: {{ username }})</span>
+                <form action="{{ url_for('logout') }}" method="get">
+                    <button type="submit" class="btn btn-warning btn-sm">Logout</button>
+                </form>
+            </div>
+            <div class="p-3 border-bottom">
+                <div class="input-group">
+                    <span class="input-group-text">Your Password (for AES Key)</span>
+                    <input type="password" id="aesKeyInput" class="form-control form-control-aes" placeholder="Enter your password (for AES key derivation)" value="">
+                    <button class="btn btn-outline-secondary" type="button" id="toggleKeyBtn">Show</button>
+                </div>
+            </div>
+            <div class="chat-messages d-flex flex-column" id="messages">
+                </div>
+            <div class="chat-input-area">
+                <div class="input-group">
+                    <input type="text" id="messageInput" class="form-control" placeholder="Type your message...">
+                    <button class="btn btn-primary" id="sendMessageBtn">Send Encrypted</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.5/socket.io.min.js"></script>
+    <script>
+        const CURRENT_USERNAME = "{{ username }}";
+        const socket = io();
+        const messagesDiv = document.getElementById('messages');
+        const messageInput = document.getElementById('messageInput');
+        const sendMessageBtn = document.getElementById('sendMessageBtn');
+        const aesKeyInput = document.getElementById('aesKeyInput');
+        const toggleKeyBtn = document.getElementById('toggleKeyBtn');
+        const userList = document.getElementById('userList');
+
+        let aesCryptoKey = null;
+        let selectedRecipient = 'general'; // Default to public chat
+
+        // Event listener for toggle key button
+        toggleKeyBtn.addEventListener('click', () => {
+            if (aesKeyInput.type === 'password') {
+                aesKeyInput.type = 'text';
+                toggleKeyBtn.textContent = 'Hide';
+            } else {
+                aesKeyInput.type = 'password';
+                toggleKeyBtn.textContent = 'Show';
+            }
+        });
+
+        // Event listener for AES key input changes
+        aesKeyInput.addEventListener('input', async () => {
+            const passphrase = aesKeyInput.value;
+            if (passphrase.length > 0) {
+                const salt = new Uint8Array([
+                    0x2a, 0x5a, 0x47, 0x42, 0x4e, 0x4a, 0x45, 0x31,
+                    0x44, 0x5a, 0x49, 0x4f, 0x45, 0x4e, 0x44, 0x50
+                ]);
+                try {
+                    aesCryptoKey = await getKeyFromPassphrase(passphrase, salt);
+                    console.log('AES key derived successfully from password.');
+                    // Re-display messages once key is derived to decrypt history
+                    displayFilteredMessages(globalMessageHistory);
+                } catch (e) {
+                    console.error('Error deriving AES key:', e);
+                    alert('Could not derive AES key. Please check your password or browser support.');
+                    aesCryptoKey = null;
+                }
+            } else {
+                aesCryptoKey = null;
+                console.warn('Password (for AES key) input is empty.');
+            }
+        });
+
+        // Initial prompt for password
+        window.addEventListener('load', () => {
+            if (!aesKeyInput.value) {
+                appendMessage('System', 'Please enter your password in the "Your Password (for AES Key)" field to enable encryption/decryption.', new Date().toLocaleTimeString());
+            } else {
+                aesKeyInput.dispatchEvent(new Event('input')); // Try to derive key if value exists
+            }
+        });
+
+        // --- AES Encryption/Decryption Functions (same as before) ---
+        async function getKeyFromPassphrase(passphrase, salt) {
+            const enc = new TextEncoder();
+            const keyMaterial = await crypto.subtle.importKey(
+                "raw",
+                enc.encode(passphrase),
+                { name: "PBKDF2" },
+                false,
+                ["deriveBits", "deriveKey"]
+            );
+            const derivedKey = await crypto.subtle.deriveKey(
+                {
+                    name: "PBKDF2",
+                    salt: salt,
+                    iterations: 100000,
+                    hash: "SHA-256",
+                },
+                keyMaterial,
+                { name: "AES-GCM", length: 256 },
+                true,
+                ["encrypt", "decrypt"]
+            );
+            return derivedKey;
+        }
+
+        async function encryptMessage(message, key) {
+            const enc = new TextEncoder();
+            const encoded = enc.encode(message);
+            const iv = crypto.getRandomValues(new Uint8Array(12));
+
+            const ciphertext = await crypto.subtle.encrypt(
+                {
+                    name: "AES-GCM",
+                    iv: iv,
+                },
+                key,
+                encoded
+            );
+            const combined = new Uint8Array(iv.length + ciphertext.byteLength);
+            combined.set(iv, 0);
+            combined.set(new Uint8Array(ciphertext), iv.length);
+            return btoa(String.fromCharCode(...combined));
+        }
+
+        async function decryptMessage(encryptedBase64, key) {
+            try {
+                const decoded = atob(encryptedBase64);
+                const combined = new Uint8Array(decoded.split('').map(char => char.charCodeAt(0)));
+
+                const iv = combined.slice(0, 12);
+                const ciphertext = combined.slice(12);
+
+                const decrypted = await crypto.subtle.decrypt(
+                    {
+                        name: "AES-GCM",
+                        iv: iv,
+                    },
+                    key,
+                    ciphertext
+                );
+                const dec = new TextDecoder();
+                return dec.decode(decrypted);
+            } catch (e) {
+                console.error("Decryption failed:", e);
+                return "[Message could not be decrypted - wrong password or corrupted]";
+            }
+        }
+
+
+        // Function to append messages to the chat display
+        function appendMessage(sender, content, timestamp, type = 'public', receiver = null) {
+            const messageBubble = document.createElement('div');
+            messageBubble.classList.add('message-bubble', 'd-flex', 'flex-column');
+
+            let isSent = false;
+            if (sender === CURRENT_USERNAME) {
+                isSent = true;
+                messageBubble.classList.add('sent');
+            } else {
+                messageBubble.classList.add('received');
+            }
+
+            if (type === 'private') {
+                messageBubble.classList.add('private');
+            }
+
+            const senderSpan = document.createElement('small');
+            senderSpan.classList.add('message-sender');
+            if (type === 'private' && receiver) {
+                if (isSent) {
+                    senderSpan.textContent = `Private to ${receiver}`;
+                } else {
+                    senderSpan.textContent = `Private from ${sender}`;
+                }
+            } else {
+                senderSpan.textContent = sender;
+            }
+            messageBubble.appendChild(senderSpan);
+
+            const contentDiv = document.createElement('div');
+            contentDiv.textContent = content;
+            messageBubble.appendChild(contentDiv);
+
+            const timestampSpan = document.createElement('small');
+            timestampSpan.classList.add('message-timestamp');
+            timestampSpan.textContent = timestamp;
+            messageBubble.appendChild(timestampSpan);
+
+            messagesDiv.appendChild(messageBubble);
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        }
+
+        // Store all fetched history locally
+        let globalMessageHistory = [];
+
+        // Function to filter and display messages based on selected recipient
+        async function displayFilteredMessages(allMessages) {
+            messagesDiv.innerHTML = ''; // Clear current messages
+            if (!aesCryptoKey) {
+                appendMessage('System', 'Please enter your password to decrypt history.', new Date().toLocaleTimeString());
+                return;
+            }
+
+            for (const msg of allMessages) {
+                let showMessage = false;
+                if (msg.type === 'public' && selectedRecipient === 'general') {
+                    showMessage = true;
+                } else if (msg.type === 'private') {
+                    // Hiển thị tin nhắn riêng tư nếu:
+                    // 1. Bạn là người gửi VÀ người nhận là `selectedRecipient`
+                    // HOẶC
+                    // 2. Bạn là người nhận (CURRENT_USERNAME) VÀ người gửi là `selectedRecipient`
+                    if ((msg.sender === CURRENT_USERNAME && msg.receiver === selectedRecipient) ||
+                        (msg.receiver === CURRENT_USERNAME && msg.sender === selectedRecipient)) {
+                        showMessage = true;
+                    }
+                }
+
+                if (showMessage) {
+                    const decryptedContent = await decryptMessage(msg.content, aesCryptoKey);
+                    appendMessage(msg.sender, decryptedContent, msg.timestamp, msg.type, msg.receiver);
+                }
+            }
+        }
+
+        // Socket.IO event handlers
+        socket.on('connect', () => {
+            console.log('Connected to server via WebSocket.');
+        });
+
+        socket.on('status', (data) => {
+            appendMessage('System', data.msg, new Date().toLocaleTimeString());
+        });
+
+        // The 'online_users' event is no longer used for displaying user list,
+        // but it might still be emitted by server for other potential features.
+        // You can remove this listener if not needed for future.
+        socket.on('online_users', (data) => {
+             console.log('Received online users update (not displayed in UI):', data.users);
+        });
+
+
+        socket.on('history', async (data) => {
+            console.log('Received chat history:', data.messages);
+            globalMessageHistory = data.messages; // Store full history
+            displayFilteredMessages(globalMessageHistory); // Display based on current selection
+        });
+
+        socket.on('receive_message', async (data) => {
+            console.log('Received encrypted message:', data);
+            globalMessageHistory.push(data); // Add new message to history
+
+            // Re-display messages to include the new one if it matches the current filter
+            displayFilteredMessages(globalMessageHistory);
+        });
+
+
+        // Function to handle selecting a recipient (public or private)
+        function selectRecipient(username) {
+            if (selectedRecipient === username) return;
+
+            selectedRecipient = username;
+            document.querySelectorAll('.user-list-item').forEach(item => {
+                item.classList.remove('selected');
+                if (item.getAttribute('data-username') === username) {
+                    item.classList.add('selected');
+                }
+            });
+
+            displayFilteredMessages(globalMessageHistory);
+        }
+
+        // Add event listeners to dynamically generated user buttons
+        document.querySelectorAll('.user-list-item').forEach(button => {
+            button.addEventListener('click', () => {
+                selectRecipient(button.getAttribute('data-username'));
+            });
+        });
+
+
+        // Send message button click
+        sendMessageBtn.addEventListener('click', async () => {
+            const message = messageInput.value.trim(); // Trim whitespace
+
+            if (!message) {
+                alert('Message cannot be empty.');
+                return;
+            }
+            if (!aesCryptoKey) {
+                alert('Please enter your password to derive the AES key.');
+                return;
+            }
+            if (!CURRENT_USERNAME) {
+                alert('You are not logged in. Please log in first.');
+                window.location.href = '/login';
+                return;
+            }
+
+            try {
+                const encryptedMessage = await encryptMessage(message, aesCryptoKey);
+                const messageType = selectedRecipient === 'general' ? 'public' : 'private';
+
+                let dataToSend = {
+                    message: encryptedMessage,
+                    type: messageType
+                };
+
+                if (messageType === 'private') {
+                    if (selectedRecipient === CURRENT_USERNAME) {
+                        alert('Cannot send private message to yourself.');
+                        return;
+                    }
+                    dataToSend['recipient_username'] = selectedRecipient;
+                } else {
+                    dataToSend['room'] = 'general';
+                }
+
+                console.log('Sending message:', dataToSend);
+                socket.emit('send_message', dataToSend);
+
+                // Client-side prediction: add own message to history and re-display
+                const sentMessageData = {
+                    sender: CURRENT_USERNAME,
+                    content: encryptedMessage, // Keep encrypted, decrypt later if needed
+                    timestamp: new Date().toLocaleTimeString(),
+                    type: messageType,
+                    receiver: (messageType === 'private' ? selectedRecipient : null)
+                };
+                globalMessageHistory.push(sentMessageData);
+                displayFilteredMessages(globalMessageHistory); // Update UI immediately
+
+                messageInput.value = ''; // Clear input field
+            } catch (e) {
+                console.error("Error sending message:", e);
+                alert("Failed to send message. Encryption error or network issue.");
+            }
+        });
+
+        // Send message on Enter key press
+        messageInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                sendMessageBtn.click();
+            }
+        });
+    </script>
+</body>
+</html>

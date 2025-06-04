@@ -1,0 +1,63 @@
+2025-05-29 15:55:06,409 - INFO - Đã tạo người dùng mặc định: testuser/testpassword
+2025-05-29 15:55:06,475 - INFO - Đã tạo người dùng mặc định: user2/password2
+2025-05-29 15:55:06,542 - INFO - Đã tạo người dùng mặc định: user3/password3
+2025-05-29 15:55:06,548 - INFO -  * Restarting with stat
+2025-05-29 15:55:07,292 - WARNING -  * Debugger is active!
+2025-05-29 15:55:07,295 - INFO -  * Debugger PIN: 139-953-355
+2025-05-29 15:55:36,829 - INFO - User user2 (ID: 2) connected with SID: IOhwdj3eawbSTPGBAAAB. Total SIDs for user: 1
+2025-05-29 15:55:36,830 - DEBUG - DEBUG Connect: active_users_sids: {2: ['IOhwdj3eawbSTPGBAAAB']}
+2025-05-29 15:55:36,830 - DEBUG - DEBUG Connect: sid_to_user_id: {'IOhwdj3eawbSTPGBAAAB': 2}
+2025-05-29 15:56:11,636 - INFO - User user3 (ID: 3) connected with SID: 2rEr5O-o9FIFXgiEAAAD. Total SIDs for user: 1
+2025-05-29 15:56:11,636 - DEBUG - DEBUG Connect: active_users_sids: {2: ['IOhwdj3eawbSTPGBAAAB'], 3: ['2rEr5O-o9FIFXgiEAAAD']}
+2025-05-29 15:56:11,636 - DEBUG - DEBUG Connect: sid_to_user_id: {'IOhwdj3eawbSTPGBAAAB': 2, '2rEr5O-o9FIFXgiEAAAD': 3}
+2025-05-29 15:56:59,979 - INFO - Tin nhắn đã được ghi vào DB từ user2. Loại: private
+2025-05-29 15:56:59,980 - INFO - Gửi tin nhắn riêng tư từ user2 tới user3.
+2025-05-29 16:44:29,223 - INFO - User user2 (ID: 2) đã offline.
+2025-05-29 16:44:29,224 - DEBUG - DEBUG Disconnect: active_users_sids: {3: ['2rEr5O-o9FIFXgiEAAAD']}
+2025-05-29 16:44:29,224 - DEBUG - DEBUG Disconnect: sid_to_user_id: {'2rEr5O-o9FIFXgiEAAAD': 3}
+2025-05-29 16:44:29,242 - INFO - User user3 (ID: 3) đã offline.
+2025-05-29 16:44:29,244 - DEBUG - DEBUG Disconnect: active_users_sids: {}
+2025-05-29 16:44:29,244 - DEBUG - DEBUG Disconnect: sid_to_user_id: {}
+2025-05-30 16:14:37,140 - INFO - User user3 (ID: 3) connected with SID: Bm1Rf4omZNpkjVBVAAAF. Total SIDs for user: 1
+2025-05-30 16:14:37,160 - DEBUG - DEBUG Connect: active_users_sids: {3: ['Bm1Rf4omZNpkjVBVAAAF']}
+2025-05-30 16:14:37,182 - DEBUG - DEBUG Connect: sid_to_user_id: {'Bm1Rf4omZNpkjVBVAAAF': 3}
+2025-05-30 16:19:54,657 - INFO - User user3 (ID: 3) đã offline.
+2025-05-30 16:19:54,660 - DEBUG - DEBUG Disconnect: active_users_sids: {}
+2025-05-30 16:19:54,661 - DEBUG - DEBUG Disconnect: sid_to_user_id: {}
+2025-05-30 16:20:22,851 - INFO - User user3 (ID: 3) connected with SID: irzbMv4o-X7i1kOoAAAI. Total SIDs for user: 1
+2025-05-30 16:20:22,851 - DEBUG - DEBUG Connect: active_users_sids: {3: ['irzbMv4o-X7i1kOoAAAI']}
+2025-05-30 16:20:22,852 - DEBUG - DEBUG Connect: sid_to_user_id: {'irzbMv4o-X7i1kOoAAAI': 3}
+2025-05-30 16:27:30,370 - INFO - User user3 (ID: 3) đã offline.
+2025-05-30 16:27:30,371 - DEBUG - DEBUG Disconnect: active_users_sids: {}
+2025-05-30 16:27:30,371 - DEBUG - DEBUG Disconnect: sid_to_user_id: {}
+2025-06-02 15:41:28,106 - INFO -  * Restarting with stat
+2025-06-02 15:41:28,850 - WARNING -  * Debugger is active!
+2025-06-02 15:41:28,853 - INFO -  * Debugger PIN: 724-295-371
+2025-06-02 15:42:17,153 - INFO - User user2 (ID: 2) connected with SID: Y9K4s1CShxRIl_MYAAAB. Total SIDs for user: 1
+2025-06-02 15:42:17,154 - DEBUG - DEBUG Connect: active_users_sids: {2: ['Y9K4s1CShxRIl_MYAAAB']}
+2025-06-02 15:42:17,154 - DEBUG - DEBUG Connect: sid_to_user_id: {'Y9K4s1CShxRIl_MYAAAB': 2}
+2025-06-02 15:42:39,090 - INFO - User user3 (ID: 3) connected with SID: X7ehkcEtZv9v3OwOAAAD. Total SIDs for user: 1
+2025-06-02 15:42:39,090 - DEBUG - DEBUG Connect: active_users_sids: {2: ['Y9K4s1CShxRIl_MYAAAB'], 3: ['X7ehkcEtZv9v3OwOAAAD']}
+2025-06-02 15:42:39,090 - DEBUG - DEBUG Connect: sid_to_user_id: {'Y9K4s1CShxRIl_MYAAAB': 2, 'X7ehkcEtZv9v3OwOAAAD': 3}
+2025-06-02 15:43:22,424 - INFO - Tin nhắn đã được ghi vào DB từ user2. Loại: private
+2025-06-02 15:43:22,425 - INFO - Gửi tin nhắn riêng tư từ user2 tới user3.
+2025-06-02 15:43:33,704 - INFO - User user2 (ID: 2) đã offline.
+2025-06-02 15:43:33,704 - DEBUG - DEBUG Disconnect: active_users_sids: {3: ['X7ehkcEtZv9v3OwOAAAD']}
+2025-06-02 15:43:33,704 - DEBUG - DEBUG Disconnect: sid_to_user_id: {'X7ehkcEtZv9v3OwOAAAD': 3}
+2025-06-02 15:43:36,864 - INFO - User user3 (ID: 3) đã offline.
+2025-06-02 15:43:36,865 - DEBUG - DEBUG Disconnect: active_users_sids: {}
+2025-06-02 15:43:36,865 - DEBUG - DEBUG Disconnect: sid_to_user_id: {}
+2025-06-04 13:02:17,862 - INFO -  * Restarting with stat
+2025-06-04 13:02:19,438 - WARNING -  * Debugger is active!
+2025-06-04 13:02:19,442 - INFO -  * Debugger PIN: 102-403-170
+2025-06-04 13:06:05,534 - INFO -  * Restarting with stat
+2025-06-04 13:06:06,897 - WARNING -  * Debugger is active!
+2025-06-04 13:06:06,902 - INFO -  * Debugger PIN: 549-771-676
+2025-06-04 13:11:39,949 - INFO -  * Restarting with stat
+2025-06-04 13:11:41,361 - WARNING -  * Debugger is active!
+2025-06-04 13:11:41,365 - INFO -  * Debugger PIN: 393-917-576
+2025-06-04 13:11:44,183 - WARNING - Client không được xác thực kết nối: GXdZBrhZd5RGkjFsAAAB. Ngắt kết nối.
+2025-06-04 13:11:44,185 - INFO - Client (SID: GXdZBrhZd5RGkjFsAAAB) ngắt kết nối (không xác thực hoặc không rõ).
+2025-06-04 13:12:12,760 - INFO - User tranvanlam05 (ID: 4) connected with SID: CSZZbvx6cycMeTnPAAAD. Total SIDs for user: 1
+2025-06-04 13:12:12,761 - DEBUG - DEBUG Connect: active_users_sids: {4: ['CSZZbvx6cycMeTnPAAAD']}
+2025-06-04 13:12:12,762 - DEBUG - DEBUG Connect: sid_to_user_id: {'CSZZbvx6cycMeTnPAAAD': 4}
