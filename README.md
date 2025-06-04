@@ -13,9 +13,9 @@ Dựa trên các yêu cầu từ bài toán thực hành, ứng dụng cần đ�
   
 <h2>🖼️ Giao diện người dùng</h2>
 
-<img src="Screenshot 2025-05-28 141258.png" alt="Encrypt Interface">
+<img src="Screenshot 2025-06-04 131155.png" alt="Encrypt Interface">
 <br><br>
-<img src="Screenshot 2025-05-28 141319.png" alt="Decrypt Interface">
+<img src="Screenshot 2025-06-04 131221.png" alt="Decrypt Interface">
 
 ## Công nghệ & Khái niệm (Dự kiến):
 
